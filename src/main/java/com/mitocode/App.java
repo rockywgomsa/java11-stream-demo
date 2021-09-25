@@ -128,8 +128,6 @@ public class App {
                                     .reduce(Double::sum);
                                     //.reduce((a,b) -> a+b)
         System.out.println(sum.get());
-        
-
     }
     
     public static int getAge(LocalDate birthDate) {
