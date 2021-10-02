@@ -33,8 +33,10 @@ public class App {
         List<Product> products = Arrays.asList(pr1, pr2, pr3, pr4);
 
         System.out.println("=========R O C K Y=============");
+        
+        /*LAS EXPRESIONES LAMBDA SON FUNCIONES ANONIMAS*/
                 
-        printList(persons);
+//        printList(persons);
 
         // 1-Filter (param: Predicate)        
 //        filterPerson(persons);
