@@ -38,31 +38,23 @@ public class App {
                 
 //        printList(persons);
 
-        // 1-Filter (param: Predicate)        
+        // 1-Filter (param: Predicate, esto es siempre una condicion que devolvera true o false)        
 //        filterPerson(persons);
-
-        //App.printList(filteredList1);
         
-        // 2-Map (param: Function)
-//        mapPerson(persons);
-        
-        //App.printList(filteredList2);      
+        // 2-Map (param: Function, siempre recibe una funcion. La funcion se puede aislar)
+//        mapPerson(persons);  
 
         // 3-Sorted (param: Comparator)
-//        comparatorPerson(persons);
-        
-        //App.printList(filteredList3);          
+        sorterPerson(persons);        
         
         // 4-Match (param: Predicate)
 //          matchPerson(persons);
         
         // 5-Limit/Skip
 //       limitPerson(persons);
-        //App.printList(filteredList4);
         
         // 6-Collectors        
 //        colectorsProducts(products);
-        //System.out.println(statistics);
         
         //7-reduce        
 //        reduceProducts(products);
@@ -82,32 +74,48 @@ public class App {
         /*for(Person p : persons){
                 System.out.println(p);
         }*/
-        //persons.forEach(x -> System.out.println(x));        
+//        lista.forEach(x -> System.out.println(x));        
         //persons.forEach(System.out::println);
-    	list.forEach(x -> System.out.println(x));
+//    	list.forEach(x -> System.out.println(x));
     	
-//        list.forEach(System.out::println);
+        list.forEach(System.out::println);
     }
     
     public static void filterPerson(List<Person> persons) {
-    	List<Person> filteredList1 = persons.stream()
-                .filter(p -> App.getAge(p.getBirthDate()) >= 18)
-                .collect(Collectors.toList());
+    	List<Person> lista = persons.stream()
+				                .filter(p -> App.getAge(p.getBirthDate()) >= 18)
+				                .collect(Collectors.toList());
+    	
+    	App.printList(lista);
     }
     
     public static void mapPerson(List<Person> persons) {
-    	Function<String, String> coderFunction = name -> "Coder " + name;
-        List<String> filteredList2 = persons.stream()
-                                        //.filter(p -> App.getAge(p.getBirthDate()) >= 18)
-                                        //.map(p -> App.getAge(p.getBirthDate()))
-                                        //.map(p -> "Coder " + p.getName())
-                                        //.map(p-> p.getName())
-                                        .map(Person::getName)
-                                        .map(coderFunction)
-                                        .collect(Collectors.toList());
+    	Function<String, String> rockyFunction = x -> x + "_Rocky";
+    	List<String> lista = persons.stream()
+//    			.filter(p -> App.getAge(p.getBirthDate()) >= 18)
+//    			.map(p -> App.getAge(p.getBirthDate()))
+//    			.map(p -> p.getName() + "_Rocky")
+    			.map(Person::getName)
+    			.map(rockyFunction)
+    			.collect(Collectors.toList());
+    	
+    	
+    	
+//    	Function<String, String> coderFunction = name -> "Coder " + name;
+//        List<String> lista = persons.stream()
+//                                        //.filter(p -> App.getAge(p.getBirthDate()) >= 18)
+//                                        //.map(p -> App.getAge(p.getBirthDate()))
+//                                        //.map(p -> "Coder " + p.getName())
+//                                        //.map(p-> p.getName())
+//                                        .map(Person::getName)
+//                                        .map(coderFunction)
+//                                        .collect(Collectors.toList());
+        
+        
+        App.printList(lista);
     }
     
-    public static void comparatorPerson(List<Person> persons) {
+    public static void sorterPerson(List<Person> persons) {
     	Comparator<Person> byNameAsc = (Person o1, Person o2) -> o1.getName().compareTo(o2.getName());
         Comparator<Person> byNameDesc = (Person o1, Person o2) -> o2.getName().compareTo(o1.getName());
         Comparator<Person> byBirthDate = (Person o1, Person o2) -> o1.getBirthDate().compareTo(o2.getBirthDate());
