@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.mitocode.model.Person;
@@ -33,8 +32,47 @@ public class App {
         List<Person> persons = Arrays.asList(p1, p2, p3, p4, p5);
         List<Product> products = Arrays.asList(pr1, pr2, pr3, pr4);
 
-        // Lambda //method reference
-        // list.forEach(System.out::println);
+        System.out.println("=========R O C K Y=============");
+                
+        printList(persons);
+
+        // 1-Filter (param: Predicate)        
+//        filterPerson(persons);
+
+        //App.printList(filteredList1);
+        
+        // 2-Map (param: Function)
+//        mapPerson(persons);
+        
+        //App.printList(filteredList2);      
+
+        // 3-Sorted (param: Comparator)
+//        comparatorPerson(persons);
+        
+        //App.printList(filteredList3);          
+        
+        // 4-Match (param: Predicate)
+//          matchPerson(persons);
+        
+        // 5-Limit/Skip
+//       limitPerson(persons);
+        //App.printList(filteredList4);
+        
+        // 6-Collectors        
+//        colectorsProducts(products);
+        //System.out.println(statistics);
+        
+        //7-reduce        
+//        reduceProducts(products);
+    }
+    
+    public static int getAge(LocalDate birthDate) {
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    public static void printList(List<?> list){
+    	
+    	// Lambda //method reference
         /*for(int i = 0; i<persons.size(); i++){
                 System.out.println(persons.get(i));
         
@@ -44,16 +82,19 @@ public class App {
         }*/
         //persons.forEach(x -> System.out.println(x));        
         //persons.forEach(System.out::println);
-
-        // 1-Filter (param: Predicate)        
-        List<Person> filteredList1 = persons.stream()
-                                        .filter(p -> App.getAge(p.getBirthDate()) >= 18)
-                                        .collect(Collectors.toList());
-
-        //App.printList(filteredList1);        
-
-        // 2-Map (param: Function)
-        Function<String, String> coderFunction = name -> "Coder " + name;
+    	list.forEach(x -> System.out.println(x));
+    	
+//        list.forEach(System.out::println);
+    }
+    
+    public static void filterPerson(List<Person> persons) {
+    	List<Person> filteredList1 = persons.stream()
+                .filter(p -> App.getAge(p.getBirthDate()) >= 18)
+                .collect(Collectors.toList());
+    }
+    
+    public static void mapPerson(List<Person> persons) {
+    	Function<String, String> coderFunction = name -> "Coder " + name;
         List<String> filteredList2 = persons.stream()
                                         //.filter(p -> App.getAge(p.getBirthDate()) >= 18)
                                         //.map(p -> App.getAge(p.getBirthDate()))
@@ -62,20 +103,20 @@ public class App {
                                         .map(Person::getName)
                                         .map(coderFunction)
                                         .collect(Collectors.toList());
-        //App.printList(filteredList2);      
-
-        // 3-Sorted (param: Comparator)
-        Comparator<Person> byNameAsc = (Person o1, Person o2) -> o1.getName().compareTo(o2.getName());
+    }
+    
+    public static void comparatorPerson(List<Person> persons) {
+    	Comparator<Person> byNameAsc = (Person o1, Person o2) -> o1.getName().compareTo(o2.getName());
         Comparator<Person> byNameDesc = (Person o1, Person o2) -> o2.getName().compareTo(o1.getName());
         Comparator<Person> byBirthDate = (Person o1, Person o2) -> o1.getBirthDate().compareTo(o2.getBirthDate());
 
         List<Person> filteredList3 = persons.stream()
                                         .sorted(byBirthDate)
                                         .collect(Collectors.toList());
-        //App.printList(filteredList3);          
-        
-        // 4-Match (param: Predicate)
-        Predicate<Person> startsWithPredicate = person -> person.getName().startsWith("J");
+    }
+    
+    public static void matchPerson(List<Person> persons) {
+    	Predicate<Person> startsWithPredicate = person -> person.getName().startsWith("J");
         // anyMatch : No evalua todo el stream, termina en la coincidencia
         boolean rpta1 = persons.stream()
                                 .anyMatch(startsWithPredicate);        
@@ -85,56 +126,50 @@ public class App {
         
         // noneMatch : Evalua todo el stream bajo la condicion
         boolean rpta3 = persons.stream()
-                                .noneMatch(startsWithPredicate);                
-        
-        // 5-Limit/Skip
-        int pageNumber = 1;
-        int pageSize = 2;
-        List<Person> filteredList4 = persons.stream()
-                                        .skip(pageNumber * pageSize)
-                                        .limit(pageSize)
-                                        .collect(Collectors.toList());
-        //App.printList(filteredList4);
-        
-        // 6-Collectors
-        // GroupBy
-        Map<String, List<Product>> collect1 = products.stream()
-                                                .filter(p -> p.getPrice() > 20)
-                                                .collect(Collectors.groupingBy(Product::getName));
-        //System.out.println(collect1);
-        // Counting
-        Map<String, Long> collect2 = products.stream()
-                                            .collect(Collectors.groupingBy(
-                                                Product::getName, Collectors.counting()
-                                                )
-                                            );
-        //System.out.println(collect2);
-        //Agrupando por nombre producto y sumando
-        Map<String, Double> collect3 = products.stream()
-                                            .collect(Collectors.groupingBy(
-                                                Product::getName, 
-                                                Collectors.summingDouble(Product::getPrice)
-                                                )
-                                            );
-        //System.out.println(collect3);
-        //Obteniendo suma y resumen
-        DoubleSummaryStatistics statistics = products.stream()
-                                                .collect(Collectors.summarizingDouble(Product::getPrice));
-        //System.out.println(statistics);
-        
-        //7-reduce        
-        Optional<Double> sum = products.stream()
-                                    .map(Product::getPrice)
-                                    .reduce(Double::sum);
-                                    //.reduce((a,b) -> a+b)
-        System.out.println(sum.get());
+                                .noneMatch(startsWithPredicate); 
     }
     
-    public static int getAge(LocalDate birthDate) {
-        return Period.between(birthDate, LocalDate.now()).getYears();
-    }
-
-    public static void printList(List<?> list){
-        list.forEach(System.out::println);
-    }
+    public static void limitPerson(List<Person> persons) {
+    	 int pageNumber = 1;
+         int pageSize = 2;
+         List<Person> filteredList4 = persons.stream()
+                                         .skip(pageNumber * pageSize)
+                                         .limit(pageSize)
+                                         .collect(Collectors.toList());
+	}
+    
+    
+    public static void colectorsProducts(List<Product> products ) {
+    	// GroupBy
+    	Map<String, List<Product>> collect1 = products.stream()
+                .filter(p -> p.getPrice() > 20)
+                .collect(Collectors.groupingBy(Product::getName));
+//System.out.println(collect1);
+// Counting
+Map<String, Long> collect2 = products.stream()
+            .collect(Collectors.groupingBy(
+                Product::getName, Collectors.counting()
+                )
+            );
+//System.out.println(collect2);
+//Agrupando por nombre producto y sumando
+Map<String, Double> collect3 = products.stream()
+            .collect(Collectors.groupingBy(
+                Product::getName, 
+                Collectors.summingDouble(Product::getPrice)
+                )
+            );
+//System.out.println(collect3);
+//Obteniendo suma y resumen
+DoubleSummaryStatistics statistics = products.stream()
+                .collect(Collectors.summarizingDouble(Product::getPrice));
+	}
+    
+    public static void reduceProducts(List<Product> products) {
+    	Optional<Double> sum = products.stream()
+                .map(Product::getPrice)
+                .reduce(Double::sum);
+                //.reduce((a,b) -> a+b)
+System.out.println(sum.get());
+	}
 }
